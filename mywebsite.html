@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World of Tourism & Travels</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #050505;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .container {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 20px 15px;
+            box-sizing: border-box;
+            border: 2px solid #ff477e;
+            border-radius: 15px;
+            width: 92%;
+            max-width: 400px; /* Perfectly locked to mobile width */
+            margin: 15px auto;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(255, 71, 126, 0.2);
+        }
+
+        /* Screen States & Custom Animations for Page Transitions */
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Website Simulation Styling */
+        .site-header {
+            color: #ff7096;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .booking-card {
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .booking-title {
+            color: #fff;
+            font-size: 1rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-row {
+            margin: 8px 0;
+            font-size: 0.85rem;
+            color: #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-label {
+            color: #888;
+        }
+
+        .detail-value {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .divider {
+            border-top: 1px dashed #333;
+            margin: 10px 0;
+        }
+
+        .total-row {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #ff477e;
+        }
+
+        .itinerary-list {
+            padding-left: 18px;
+            margin: 5px 0;
+            color: #e0e0e0;
+            font-size: 0.8rem;
+        }
+
+        .itinerary-list li {
+            margin-bottom: 5px;
+        }
+
+        /* Colorful Timer Sequence Styling */
+        .colorful-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 12px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .text-neon-pink { color: #ff477e; text-shadow: 0 0 10px rgba(255, 71, 126, 0.6); }
+        .text-neon-cyan { color: #00f0ff; text-shadow: 0 0 10px rgba(0, 240, 255, 0.6); }
+        .text-neon-yellow { color: #ffea00; text-shadow: 0 0 10px rgba(255, 234, 0, 0.6); }
+        .text-neon-purple { color: #b026ff; text-shadow: 0 0 10px rgba(176, 38, 255, 0.6); }
+        .text-neon-green { color: #39ff14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.6); }
+
+        .btn {
+            background: linear-gradient(45deg, #ff477e, #ff7096);
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(255, 71, 126, 0.4);
+            margin-top: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(255, 71, 126, 0.6);
+        }
+
+        .live-count {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 15px 0;
+            background: linear-gradient(45deg, #00f0ff, #ff477e, #ffea00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(255, 71, 126, 0.5));
+        }
+
+        /* Progress Bar */
+        .progress-box {
+            margin: 15px 0;
+        }
+        .progress-text {
+            font-family: monospace;
+            color: #39ff14;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Cake Display */
+        .cake-container {
+            margin: 15px auto;
+            width: 120px;
+            height: 90px;
+            position: relative;
+        }
+        .cake-layer {
+            background: #ff477e;
+            width: 110px;
+            height: 35px;
+            position: absolute;
+            bottom: 0;
+            left: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .cake-top {
+            background: #ffffff;
+            width: 80px;
+            height: 30px;
+            position: absolute;
+            bottom: 33px;
+            left: 20px;
+            border-radius: 5px 5px 0 0;
+        }
+        .candles-row {
+            position: absolute;
+            bottom: 60px;
+            left: 25px;
+            width: 70px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .candle {
+            width: 4px;
+            height: 12px;
+            background: #00f0ff;
+            position: relative;
+        }
+        .flame {
+            width: 5px;
+            height: 8px;
+            background: #ffa500;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: -9px;
+            left: 0px;
+            animation: flicker 0.4s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
+
+        /* Lofi Glow Particles */
+        .particle {
+            position: absolute;
+            font-size: 18px;
+            animation: floatUp 4.5s linear infinite;
+            opacity: 0;
+            bottom: -10%;
+            pointer-events: none;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        @keyframes floatUp {
+            0% { bottom: -10%; opacity: 0; transform: translateX(0); }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { bottom: 110%; opacity: 0; transform: translateX(30px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="screen-start" class="screen active">
+            <div class="site-header">Welcome to the world of tourism and travels</div>
+            
+            <div class="booking-card">
+                <div class="booking-title">
+                    <span>📋 Flight Summary</span>
+                    <span style="color:#39ff14; font-size:0.75rem; font-family:sans-serif; letter-spacing:0.5px;">PAID &amp; CONFIRMED</span>
+                </div>
+                <div class="detail-row"><span class="detail-label">Passengers (2):</span> <span class="detail-value">Anushka &amp; Ranojoy</span></div>
+                <div class="detail-row"><span class="detail-label">Route:</span> <span class="detail-value">IXR (Ranchi) ➔ BKK (Bangkok)</span></div>
+                <div class="detail-row"><span class="detail-label">Carrier:</span> <span class="detail-value">Fly Emirates</span></div>
+                <div class="detail-row"><span class="detail-label">Class:</span> <span class="detail-value">Business Premium</span></div>
+                <div class="detail-row"><span class="detail-label">Seats:</span> <span class="detail-value">02A, 02B (Window Side)</span></div>
+                
+                <div class="divider"></div>
+
+                <div class="booking-title">
+                    <span>🗺️ Experiences Included</span>
+                </div>
+                <ul class="itinerary-list">
+                    <li>VIP Private Luxury Yacht Tour <span style="color:#39ff14;">[PAID]</span></li>
+                    <li>Sky Bar Premium Dinner at Lebua <span style="color:#39ff14;">[PAID]</span></li>
+                    <li>Helicopter Island Ride over Phuket <span style="color:#39ff14;">[PAID]</span></li>
+                    <li>Premium Couple Spa Session <span style="color:#39ff14;">[PAID]</span></li>
+                </ul>
+                
+                <div class="divider"></div>
+                
+                <div class="booking-title"><span>💳 Total Cost</span></div>
+                <div class="detail-row total-row">
+                    <span>Amount Paid (INR equivalent):</span>
+                    <span style="color:#39ff14;">$4,800.00</span>
+                </div>
+                <div class="detail-row" style="font-size:0.75rem; color:#666; margin-top:-5px;">
+                    <span>~ ₹4,00,000.00 Lakhs processed via international channel</span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #777; margin-bottom:12px;">Your ticket generation is ready. Click below to finalise checkout and obtain your passes.</p>
+            <button class="btn" onclick="runSequence()">Checkout →</button>
+        </div>
+
+        <div id="screen-countdown" class="screen">
+            <p class="colorful-text text-neon-cyan">Preparing Your Journey…</p>
+            <div id="countdown-number" class="live-count">10</div>
+        </div>
+
+        <div id="screen-boom" class="screen">
+            <h2 class="colorful-text text-neon-pink" style="font-size: 2rem; margin-top:30px;">💥💥💥 BOOOOM 💥💥💥</h2>
+            <p class="colorful-text text-neon-purple" style="margin-top:20px;">Something went wrong with the booking server...</p>
+            <p class="colorful-text text-neon-yellow">Click below to fix the connection.</p>
+            <button class="btn" onclick="goToRedirectPage()" style="margin-top:30px;">Fix Connection Now →</button>
+        </div>
+
+        <div id="screen-redirect" class="screen">
+            <p class="colorful-text text-neon-purple">✨ DESTINATION CHANGED ✨</p>
+            <p class="colorful-text text-neon-yellow">✈️ THAILAND TRIP CANCELLED...</p>
+            <p class="colorful-text text-neon-cyan">❤️ REDIRECTING TO YOUR REAL DESTINATION ❤️</p>
+            <button class="btn" onclick="proceedToLoading()" style="margin-top:20px;">Open New Itinerary →</button>
+        </div>
+
+        <div id="screen-loading" class="screen">
+            <p class="colorful-text text-neon-purple">Loading Surprise...</p>
+            <div class="progress-box">
+                <div id="loading-bar" class="progress-text">░░░░░░░░░░ 0%</div>
+            </div>
+        </div>
+
+        <div id="screen-mini-countdown" class="screen">
+            <p class="colorful-text text-neon-green">🎊 WELCOME TO YOUR SPECIAL DAY 🎊</p>
+            <p class="colorful-text text-neon-cyan">🌟 UNLOCKING SOME NEW EXPERIENCE 🌟</p>
+            <div id="mini-countdown-number" class="live-count">3</div>
+        </div>
+
+        <div id="screen-final" class="screen">
+            <h2 class="colorful-text text-neon-pink">🎉✨ SURPRISE REVEALED ✨🎉</h2>
+            
+            <div class="cake-container">
+                <div class="candles-row">
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                </div>
+                <div class="cake-top"></div>
+                <div class="cake-layer"></div>
+            </div>
+
+            <p class="colorful-text text-neon-pink" style="font-size: 1.3rem;">HAPPY BIRTHDAY ANUSHKA! 🎂✨</p>
+            
+            <p style="font-size:0.9rem; line-height:1.4;">Hey Anushka! Happy Birthday. 😊</p>
+            <p style="font-size:0.9rem; line-height:1.4;">I wish you all the best in life and hope all your dreams and wishes come true.</p>
+            <p style="font-size:0.9rem; line-height:1.4;">May your special day bring happiness, unforgettable moments, and a beautiful future ahead.</p>
+            <p style="font-size:0.9rem; line-height:1.4;">Today is your day — enjoy every moment! 🎉</p>
+            <p style="font-size:0.9rem; line-height:1.4;">Stay happy, keep smiling, and have an amazing year ahead. ❤️</p>
+            
+            <p class="colorful-text text-neon-green" style="font-size: 1rem; margin-top: 20px;">Enjoy your special day ✨🎉</p>
+        </div>
+    </div>
+
+    <script>
+        function switchScreen(hideId, showId) {
+            document.getElementById(hideId).classList.remove('active');
+            document.getElementById(showId).classList.add('active');
+        }
+
+        function runSequence() {
+            switchScreen('screen-start', 'screen-countdown');
+            let count = 10;
+            const countEl = document.getElementById('countdown-number');
+            
+            const mainTimer = setInterval(() => {
+                count--;
+                if (count >= 0) {
+                    countEl.innerText = count;
+                } else {
+                    clearInterval(mainTimer);
+                    switchScreen('screen-countdown', 'screen-boom');
+                }
+            }, 1000);
+        }
+
+        function goToRedirectPage() {
+            switchScreen('screen-boom', 'screen-redirect');
+        }
+
+        function proceedToLoading() {
+            switchScreen('screen-redirect', 'screen-loading');
+            runLoadingBar();
+        }
+
+        function runLoadingBar() {
+            const barEl = document.getElementById('loading-bar');
+            let progress = 0;
+            const blocks = ["■", "░"];
+            
+            const loadTimer = setInterval(() => {
+                progress += 10;
+                let filledCount = progress / 10;
+                let emptyCount = 10 - filledCount;
+                
+                let barString = blocks[0].repeat(filledCount) + blocks[1].repeat(emptyCount) + ` ${progress}%`;
+                barEl.innerText = barString;
+                
+                if (progress >= 100) {
+                    clearInterval(loadTimer);
+                    setTimeout(() => {
+                        switchScreen('screen-loading', 'screen-mini-countdown');
+                        runMiniCountdown();
+                    }, 1000);
+                }
+            }, 300);
+        }
+
+        function runMiniCountdown() {
+            let miniCount = 3;
+            const miniCountEl = document.getElementById('mini-countdown-number');
+            
+            const miniTimer = setInterval(() => {
+                miniCount--;
+                if (miniCount > 0) {
+                    miniCountEl.innerText = miniCount;
+                } else {
+                    clearInterval(miniTimer);
+                    switchScreen('screen-mini-countdown', 'screen-final');
+                    startParticles();
+                }
+            }, 1000);
+        }
+
+        function startParticles() {
+            setInterval(createParticle, 120);
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            const pool = ['❤️', '✨', '💖', '🌟', '🎈'];
+            particle.innerHTML = pool[Math.floor(Math.random() * pool.length)];
+            
+            const colors = ['#ff477e', '#00f0ff', '#ffea00', '#b026ff', '#ffffff'];
+            particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.left = Math.random() * 85 + 'vw';
+            particle.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
+            document.body.appendChild(particle);
+            
+            setTimeout(() => { particle.remove(); }, 4500);
+        }
+    </script>
+</body>
+</html>
